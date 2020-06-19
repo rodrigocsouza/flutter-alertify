@@ -14,34 +14,45 @@ class Alertify {
   final String title;
   final String buttonText;
   final AnimationType animationType;
+  final Object destino;
 
-  Alertify({@required this.context, @required this.isDismissible, this.alertType, @required this.content, this.title, this.buttonText, this.animationType});
+  Alertify(
+      {@required this.context,
+      @required this.isDismissible,
+      this.alertType,
+      @required this.content,
+      this.title,
+      this.buttonText,
+      this.animationType,
+      this.destino});
 
-  void mostrar() {
+  Future show() async {
     showGeneralDialog(
-        useRootNavigator: true,
-        routeSettings: new RouteSettings( name: "/home" ),
+        useRootNavigator: false,
+        //routeSettings: new RouteSettings( name: "/home" ),
         barrierDismissible: true,
         context: context,
-        pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
+        pageBuilder: (BuildContext buildContext, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
           return _buildDialog();
         },
-        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
         barrierColor: Colors.grey.withOpacity(0.2),
         transitionDuration: Duration(milliseconds: 250),
         transitionBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-            ) =>
-            _buildAnimation(animation,secondaryAnimation, child)
-    );
+          BuildContext context,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+          Widget child,
+        ) =>
+            _buildAnimation(animation, secondaryAnimation, child));
   }
 
   Widget _buildDialog() {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0))),
       insetAnimationCurve: Curves.easeInOutCubic,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -58,7 +69,11 @@ class Alertify {
                 ),
                 Text(
                   '${this.title}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Muli', fontSize: 22, color: Colors.black87),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Muli',
+                      fontSize: 22,
+                      color: Colors.black87),
                 ),
                 SizedBox(
                   height: 8,
@@ -81,7 +96,8 @@ class Alertify {
   }
 
   Widget _buildIcon() {
-    Widget icon = Icon(Icons.check_circle_outline, size: 72, color: Colors.green);
+    Widget icon =
+        Icon(Icons.check_circle_outline, size: 72, color: Colors.green);
 
     switch (this.alertType) {
       case AlertifyType.success:
@@ -143,15 +159,25 @@ class Alertify {
                   bottomLeft: Radius.circular(8),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  print(
+                      "***************************** F E C H A N D O *********************************");
+                  if (destino == null) {
+                    print("Destino está nulo!");
+                    Navigator.pop(context);
+                  } else {
+                    print("Destino NÃO está nulo!");
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => this.destino));
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.only(top: 20, bottom: 20),
                   child: Center(
                       child: Text(
-                        '${this.buttonText}',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontFamily: 'Muli'),
-                      )),
+                    '${this.buttonText}',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 18, fontFamily: 'Muli'),
+                  )),
                 ),
               ),
             ),
@@ -161,26 +187,31 @@ class Alertify {
     );
   }
 
-  _buildAnimation(Animation<double> animation, Animation<double> secondaryAnimation, Widget child){
+  _buildAnimation(Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
     var anim;
-    switch(this.animationType){
+    switch (this.animationType) {
       case AnimationType.leftToRight:
-        anim = AnimationTransition.fromLeft(animation, secondaryAnimation, child);
+        anim =
+            AnimationTransition.fromLeft(animation, secondaryAnimation, child);
         break;
       case AnimationType.rightToLeft:
-        anim = AnimationTransition.fromRight(animation, secondaryAnimation, child);
+        anim =
+            AnimationTransition.fromRight(animation, secondaryAnimation, child);
         break;
       case AnimationType.topToBottom:
-        anim = AnimationTransition.fromTop(animation, secondaryAnimation, child);
+        anim =
+            AnimationTransition.fromTop(animation, secondaryAnimation, child);
         break;
       case AnimationType.bottomToTop:
-        anim =  AnimationTransition.fromBottom(animation, secondaryAnimation, child);
+        anim = AnimationTransition.fromBottom(
+            animation, secondaryAnimation, child);
         break;
       case AnimationType.inToOut:
         anim = AnimationTransition.grow(animation, secondaryAnimation, child);
         break;
       case AnimationType.outToIn:
-        anim =  AnimationTransition.shrink(animation, secondaryAnimation, child);
+        anim = AnimationTransition.shrink(animation, secondaryAnimation, child);
         break;
       default:
         AnimationTransition.grow(animation, secondaryAnimation, child);
@@ -188,8 +219,4 @@ class Alertify {
     }
     return anim;
   }
-
 }
-
-
-
