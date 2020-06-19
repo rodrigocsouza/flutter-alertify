@@ -19,6 +19,8 @@ class Alertify {
 
   void show() {
     showGeneralDialog(
+        useRootNavigator: true,
+        routeSettings: new RouteSettings( name: "/home" ),
         barrierDismissible: true,
         context: context,
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
