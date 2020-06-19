@@ -17,7 +17,7 @@ class Alertify {
 
   Alertify({@required this.context, @required this.isDismissible, this.alertType, @required this.content, this.title, this.buttonText, this.animationType});
 
-  void show() {
+  void mostrar() {
     showGeneralDialog(
         useRootNavigator: true,
         routeSettings: new RouteSettings( name: "/home" ),
